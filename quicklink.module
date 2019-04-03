@@ -206,18 +206,18 @@ function quicklink_preprocess_html(&$variables) {
 
     // Load current configuration.
     $selector = variable_get('selector', '');
-  
+
     // Get debug variable.
     $debug = variable_get('enable_debug_mode', 1);
     $debug_log = [];
-  
+
     // Load the library unless we disable later.
     $load_library = TRUE;
-  
+
     // Always ignore the logout link.
     $url_patterns_to_ignore = ['user/logout'];
     $debug_log[] = 'Quicklink will ignore "user/logout" URL pattern.';
-  
+
     $allowed_domains = [];
 
     // Populate and remove line returns from URL patterns to ignore.
@@ -321,16 +321,14 @@ function quicklink_preprocess_html(&$variables) {
       $debug_log[] = 'Intersection Observer polyfill library loaded';
     }
 
-    drupal_add_css(drupal_get_path('module', 'quicklink') . '/css/quicklink-debug.css');
     drupal_add_js(drupal_get_path('module', 'quicklink') . '/js/quicklink_init.js');
 
     //Send settings to Javascript
     drupal_add_js(array('quicklink' => $settings), array('type' => 'setting'));
 
     // load library
-    $localQuicklink = DRUPAL_ROOT . '/libraries/quicklink/dist/quicklink.umd.js';
-    if (file_exists($localQuicklink)) {
-      drupal_add_js($localQuicklink, array(
+    if (file_exists(DRUPAL_ROOT . '/libraries/quicklink/dist/quicklink.umd.js')) {
+      drupal_add_js(DRUPAL_ROOT . '/libraries/quicklink/dist/quicklink.umd.js', array(
         'weight' => -20,
       ));
     }
@@ -344,7 +342,7 @@ function quicklink_preprocess_html(&$variables) {
 
   if ($debug) {
     $settings['debug'] = 1;
-    // $variables['#attached']['library'][] = 'quicklink/quicklink_debug';
+    drupal_add_css(drupal_get_path('module', 'quicklink') . '/css/quicklink-debug.css');
     $settings['debug_log'] = $debug_log;
   }
 
