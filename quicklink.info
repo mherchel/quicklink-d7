@@ -1,0 +1,7 @@
+name = Quicklink
+description = This module adds a block to fetch the current pages analytics
+core = 7.x
+package = Performance and Scalability
+configure = admin/config/development/performance/quicklink
+
+files[] = quicklink.module
