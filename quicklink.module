@@ -3,7 +3,7 @@
 /**
  * Implements hook_menu().
  */
-function quicklink_menu(){
+function quicklink_menu() {
   $items['admin/config/development/performance/quicklink'] = array(
     'title' => 'Quicklink Configuration',
     'page callback' => 'drupal_get_form',
@@ -18,7 +18,7 @@ function quicklink_menu(){
 /**
  * Page callback: Configuration form to update module settings.
  */
-function quicklink_config_form($form, &$form_state){
+function quicklink_config_form($form, &$form_state) {
   // Build form elements.
   $form['settings'] = [
     '#type' => 'vertical_tabs',
@@ -175,7 +175,7 @@ function quicklink_config_form($form, &$form_state){
   return $form;
 }
 
-function quicklink_config_form_submit($form, $form_state){
+function quicklink_config_form_submit($form, $form_state) {
   $fieldsToSave = [
     'ignore_admin_paths',
     'ignore_ajax_links',
