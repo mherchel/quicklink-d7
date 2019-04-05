@@ -112,14 +112,12 @@ function quicklink_config_form($form, &$form_state){
     '#description' => t('On this tab, specify when the Quicklink library will be loaded.'),
     '#group' => 'settings',
   ];
-
   $form['when_load_library']['no_load_when_authenticated'] = [
     '#type' => 'checkbox',
     '#title' => t('Prefetch for anonymous users only'),
     '#description' => t('Highly recommended. Quicklink library will not be loaded for authenticated users.'),
     '#default_value' => variable_get('no_load_when_authenticated', 1),
   ];
-
   $form['when_load_library']['no_load_when_session'] = [
     '#type' => 'checkbox',
     '#title' => t('Do not prefetch during sessions'),
@@ -169,11 +167,11 @@ function quicklink_config_form($form, &$form_state){
     '#description' => t("Log Quicklink development information to the HTML and JavaScript console. You may need to clear Drupal's cache after changing this value."),
     '#default_value' => variable_get('enable_debug_mode', 1),
   ];
-
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );
+
   return $form;
 }
 
@@ -287,15 +285,16 @@ function quicklink_preprocess_html(&$variables) {
   // Disable the library when a session is started.
   if (variable_get('no_load_when_session', 1)) {
     $session = drupal_session_started();
+
     if (!empty($session)) {
       $load_library = FALSE;
       $debug_log[] = 'Library not loaded because PHP session is started.';
     }
   }
 
-  $settings['ignore_admin_paths'] = variable_get('ignore_admin_paths');
-  $settings['ignore_ajax_links'] = variable_get('ignore_ajax_links');
-  $settings['ignore_file_ext'] = variable_get('ignore_file_ext');
+  $settings['ignore_admin_paths'] = variable_get('ignore_admin_paths', 1);
+  $settings['ignore_ajax_links'] = variable_get('ignore_ajax_links', 1);
+  $settings['ignore_file_ext'] = variable_get('ignore_file_ext', 1);
   $settings['debug'] = $debug;
 
   if (!empty($url_patterns_to_ignore[0])) {
@@ -329,12 +328,12 @@ function quicklink_preprocess_html(&$variables) {
 
     drupal_add_js(drupal_get_path('module', 'quicklink') . '/js/quicklink_init.js');
 
-    // Send settings to JavaScript
+    // Send settings to JavaScript.
     drupal_add_js(array('quicklink' => $settings), array('type' => 'setting'));
 
-    // Load library
-    if (file_exists(DRUPAL_ROOT . '/libraries/quicklink/dist/quicklink.umd.js')) {
-      drupal_add_js(DRUPAL_ROOT . '/libraries/quicklink/dist/quicklink.umd.js', array(
+    // Load Quicklink library.
+    if (file_exists(DRUPAL_ROOT . '/sites/all/libraries/quicklink/quicklink.umd.js')) {
+      drupal_add_js(DRUPAL_ROOT . '/sites/all/libraries/quicklink/quicklink.umd.js', array(
         'weight' => -20,
       ));
     }

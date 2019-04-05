@@ -22,7 +22,7 @@ By default this module will load the Quicklink JavaScript library from a CDN at
 `https://unpkg.com/quicklink@1.0.0/dist/quicklink.umd.js`.
 
 If you place a copy of this file into your local filesystem at
-`/libraries/quicklink/dist/quicklink.umd.js`, this module will serve the local
+`/sites/all/libraries/quicklink/quicklink.umd.js`, this module will serve the local
 copy instead of the CDN copy.
 
 ## CONFIGURATION
