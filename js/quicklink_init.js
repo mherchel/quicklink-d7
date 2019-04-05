@@ -6,21 +6,15 @@
       var debug = settings.quicklink.debug;
 
       function hydrateQuicklinkConfig() {
-        settings.quicklink.quicklinkConfig =
-          settings.quicklink.quicklinkConfig || {};
-        settings.quicklink.ignoredSelectorsLog =
-          settings.quicklink.ignoredSelectorsLog || [];
+        settings.quicklink.quicklinkConfig = settings.quicklink.quicklinkConfig || {};
+        settings.quicklink.ignoredSelectorsLog = settings.quicklink.ignoredSelectorsLog || [];
 
         var quicklinkConfig = settings.quicklink.quicklinkConfig;
 
         quicklinkConfig.ignores = [];
 
         // Loop through all the patters to ignore, and generate rules to ignore URL patterns.
-        for (
-          var i = 0;
-          i < settings.quicklink.url_patterns_to_ignore.length;
-          i++
-        ) {
+        for (var i = 0; i < settings.quicklink.url_patterns_to_ignore.length; i++) {
           var pattern = settings.quicklink.url_patterns_to_ignore[i];
 
           (function(i, pattern) {
@@ -41,9 +35,7 @@
         if (settings.quicklink.ignore_admin_paths) {
           quicklinkConfig.ignores.push(function(uri, elem) {
             var ruleName = 'Exists in admin element container.';
-            var ruleFunc = elem.matches(
-              '#overlay a, #admin-menu a, #tabs a'
-            );
+            var ruleFunc = elem.matches('#overlay a, #admin-menu a, #tabs a');
 
             outputDebugInfo(ruleFunc, ruleName, uri, elem);
 
@@ -100,12 +92,8 @@
           return ruleFunc;
         });
 
-        quicklinkConfig.origins = settings.quicklink.allowed_domains
-          ? settings.quicklink.allowed_domains
-          : false;
-        quicklinkConfig.urls = settings.quicklink.prefetch_only_paths
-          ? settings.quicklink.prefetch_only_paths
-          : false;
+        quicklinkConfig.origins = settings.quicklink.allowed_domains ? settings.quicklink.allowed_domains : false;
+        quicklinkConfig.urls = settings.quicklink.prefetch_only_paths ? settings.quicklink.prefetch_only_paths : false;
       }
 
       function outputDebugInfo(ruleFunc, ruleName, uri, elem, pattern) {
@@ -139,9 +127,7 @@
 
         if (noprefetch && debug) {
           // eslint-disable-next-line no-console
-          console.info(
-            'The "noprefetch" parameter exists in the URL querystring. Quicklink library not loaded.'
-          );
+          console.info('The "noprefetch" parameter exists in the URL querystring. Quicklink library not loaded.');
         }
 
         return window.quicklink && !noprefetch;
@@ -151,23 +137,12 @@
         hydrateQuicklinkConfig();
       }
 
-      settings.quicklink.quicklinkConfig.el = settings.quicklink.selector
-        ? context.querySelector(settings.quicklink.selector)
-        : context;
+      settings.quicklink.quicklinkConfig.el = settings.quicklink.selector ? context.querySelector(settings.quicklink.selector) : context;
 
       if (debug) {
-        console.info(
-          'Quicklink config object',
-          settings.quicklink.quicklinkConfig
-        ); // eslint-disable-line no-console
-        console.info(
-          'Quicklink module debug log',
-          settings.quicklink.debug_log
-        ); // eslint-disable-line no-console
-        console.info(
-          'Quicklink ignored selectors',
-          settings.quicklink.ignoredSelectorsLog
-        ); // eslint-disable-line no-console
+        console.info('Quicklink config object', settings.quicklink.quicklinkConfig); // eslint-disable-line no-console
+        console.info('Quicklink module debug log', settings.quicklink.debug_log); // eslint-disable-line no-console
+        console.info('Quicklink ignored selectors', settings.quicklink.ignoredSelectorsLog); // eslint-disable-line no-console
       }
 
       if (loadQuicklink()) {
