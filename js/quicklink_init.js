@@ -1,5 +1,5 @@
 (function() {
-  "use strict";
+  'use strict';
 
   Drupal.behaviors.quicklink = {
     attach: function attachQuicklink(context, settings) {
@@ -27,7 +27,7 @@
             if (pattern.length) {
               quicklinkConfig.ignores.push(function(uri, elem) {
                 var ruleName =
-                  "Pattern found in href. See ignored selectors log.";
+                  'Pattern found in href. See ignored selectors log.';
                 var ruleFunc = uri.includes(pattern);
 
                 outputDebugInfo(ruleFunc, ruleName, uri, elem, pattern);
@@ -40,9 +40,9 @@
 
         if (settings.quicklink.ignore_admin_paths) {
           quicklinkConfig.ignores.push(function(uri, elem) {
-            var ruleName = "Exists in admin element container.";
+            var ruleName = 'Exists in admin element container.';
             var ruleFunc = elem.matches(
-              "#block-local-tasks-block a, .block-local-tasks-block a, #drupal-off-canvas a, #toolbar-administration a"
+              '#overlay a, #admin-menu a, #tabs a'
             );
 
             outputDebugInfo(ruleFunc, ruleName, uri, elem);
@@ -54,7 +54,7 @@
         if (settings.quicklink.ignore_ajax_links) {
           quicklinkConfig.ignores.push(function(uri, elem) {
             var ruleName = 'Link has "use-ajax" CSS class.';
-            var ruleFunc = elem.classList.contains("use-ajax");
+            var ruleFunc = elem.classList.contains('use-ajax');
 
             outputDebugInfo(ruleFunc, ruleName, uri, elem);
 
@@ -63,7 +63,7 @@
 
           quicklinkConfig.ignores.push(function(uri, elem) {
             var ruleName = 'Link has "/ajax" in url.';
-            var ruleFunc = uri.includes("/ajax");
+            var ruleFunc = uri.includes('/ajax');
 
             outputDebugInfo(ruleFunc, ruleName, uri, elem);
 
@@ -73,7 +73,7 @@
 
         if (settings.quicklink.ignore_file_ext) {
           quicklinkConfig.ignores.push(function(uri, elem) {
-            var ruleName = "Contains file extension at end of href.";
+            var ruleName = 'Contains file extension at end of href.';
             var ruleFunc = uri.match(/(\.[^\/]{1,5}\?)|(\.[^\/]{1,5}$)/);
 
             outputDebugInfo(ruleFunc, ruleName, uri, elem);
@@ -83,8 +83,8 @@
         }
 
         quicklinkConfig.ignores.push(function(uri, elem) {
-          var ruleName = "Contains noprefetch attribute.";
-          var ruleFunc = elem.hasAttribute("noprefetch");
+          var ruleName = 'Contains noprefetch attribute.';
+          var ruleFunc = elem.hasAttribute('noprefetch');
 
           outputDebugInfo(ruleFunc, ruleName, uri, elem);
 
@@ -92,8 +92,8 @@
         });
 
         quicklinkConfig.ignores.push(function(uri, elem) {
-          var ruleName = "Contains download attribute.";
-          var ruleFunc = elem.hasAttribute("download");
+          var ruleName = 'Contains download attribute.';
+          var ruleFunc = elem.hasAttribute('download');
 
           outputDebugInfo(ruleFunc, ruleName, uri, elem);
 
@@ -110,12 +110,12 @@
 
       function outputDebugInfo(ruleFunc, ruleName, uri, elem, pattern) {
         if (debug && ruleFunc) {
-          var debugMessage = ruleName + " Link ignored.";
+          var debugMessage = ruleName + ' Link ignored.';
           var thisLog = {};
           var urlPattern = pattern || false;
 
-          elem.classList.add("quicklink-ignore");
-          elem.textContent += "🚫";
+          elem.classList.add('quicklink-ignore');
+          elem.textContent += '🚫';
           elem.dataset.quicklinkMatch = debugMessage;
 
           thisLog.ruleName = ruleName;
@@ -135,7 +135,7 @@
 
       function loadQuicklink() {
         var urlParams = new URLSearchParams(window.location.search);
-        var noprefetch = urlParams.get("noprefetch") !== null;
+        var noprefetch = urlParams.get('noprefetch') !== null;
 
         if (noprefetch && debug) {
           // eslint-disable-next-line no-console
@@ -157,15 +157,15 @@
 
       if (debug) {
         console.info(
-          "Quicklink config object",
+          'Quicklink config object',
           settings.quicklink.quicklinkConfig
         ); // eslint-disable-line no-console
         console.info(
-          "Quicklink module debug log",
+          'Quicklink module debug log',
           settings.quicklink.debug_log
         ); // eslint-disable-line no-console
         console.info(
-          "Quicklink ignored selectors",
+          'Quicklink ignored selectors',
           settings.quicklink.ignoredSelectorsLog
         ); // eslint-disable-line no-console
       }
