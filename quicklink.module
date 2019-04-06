@@ -9,7 +9,7 @@ function quicklink_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments'  => array('quicklink_config_form'),
     'access arguments' => array('administer site configuration'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_LOCAL_TASK, // @todo the menu item is not appearing on the performance page.
   );
 
   return $items;
@@ -20,6 +20,9 @@ function quicklink_menu() {
  */
 function quicklink_config_form($form, &$form_state) {
   // Build form elements.
+  // @todo Vertical tabs not working.
+  // @see https://api.drupal.org/api/examples/vertical_tabs_example%21vertical_tabs_example.module/function/vertical_tabs_example_form_alter/7.x-1.x
+
   $form['settings'] = [
     '#type' => 'vertical_tabs',
     '#attributes' => ['class' => ['quicklink']],
@@ -27,7 +30,7 @@ function quicklink_config_form($form, &$form_state) {
 
   // Ignore tab.
   $form['ignore'] = [
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('Prefetch Ignore Settings'),
     '#description' => t('On this tab, specify what Quicklink should not prefetch.'),
     '#group' => 'settings',
@@ -69,7 +72,7 @@ function quicklink_config_form($form, &$form_state) {
 
   // Overrides tab.
   $form['overrides'] = [
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('Optional Overrides'),
     '#description' => t('On this tab, specify various overrides.'),
     '#group' => 'settings',
@@ -107,7 +110,7 @@ function quicklink_config_form($form, &$form_state) {
 
   // When to Prefetch tab.
   $form['when_load_library'] = [
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('When to Load Library'),
     '#description' => t('On this tab, specify when the Quicklink library will be loaded.'),
     '#group' => 'settings',
@@ -141,7 +144,7 @@ function quicklink_config_form($form, &$form_state) {
 
   // Polyfill tab.
   $form['polyfill'] = [
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('Extended Browser Support'),
     '#description' => t('On this tab, include support of additional browsers via polyfill.'),
     '#group' => 'settings',
@@ -156,7 +159,7 @@ function quicklink_config_form($form, &$form_state) {
 
   // Debug tab.
   $form['debug'] = [
-    '#type' => 'details',
+    '#type' => 'fieldset',
     '#title' => t('Debug'),
     '#description' => t('On this tab, enable debug logging.'),
     '#group' => 'settings',
