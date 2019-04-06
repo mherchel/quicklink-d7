@@ -4,12 +4,19 @@
  * Implements hook_menu().
  */
 function quicklink_menu() {
+  $items['admin/config/development/performance/default'] = array(
+    'title' => 'Performance',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+
   $items['admin/config/development/performance/quicklink'] = array(
     'title' => 'Quicklink Configuration',
     'page callback' => 'drupal_get_form',
     'page arguments'  => array('quicklink_config_form'),
     'access arguments' => array('administer site configuration'),
-    'type' => MENU_LOCAL_TASK, // @todo the menu item is not appearing on the performance page.
+    'type' => MENU_LOCAL_TASK,
+    'weight' => -9,
   );
 
   return $items;
@@ -19,10 +26,6 @@ function quicklink_menu() {
  * Page callback: Configuration form to update module settings.
  */
 function quicklink_config_form($form, &$form_state) {
-  // Build form elements.
-  // @todo Vertical tabs not working.
-  // @see https://api.drupal.org/api/examples/vertical_tabs_example%21vertical_tabs_example.module/function/vertical_tabs_example_form_alter/7.x-1.x
-
   $form['settings'] = [
     '#type' => 'vertical_tabs',
     '#attributes' => ['class' => ['quicklink']],
