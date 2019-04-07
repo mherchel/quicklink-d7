@@ -68,6 +68,7 @@ function quicklink_config_form($form, &$form_state) {
     '#title' => t('URL patterns to ignore (optional)'),
     '#description' => t('Quicklink will not fetch data if the URL contains any of these patterns. One per line.'),
     '#default_value' => variable_get('url_patterns_to_ignore', ''),
+    '#resizable' => FALSE,
     '#attributes' => [
       'style' => 'max-width: 600px;',
     ],
@@ -97,6 +98,7 @@ function quicklink_config_form($form, &$form_state) {
     '#description' => t('List of domains to prefetch from. If empty, Quicklink will only prefetch links from the origin domain.
       If you configure this, be sure to input the origin domain. Add <code>true</code> here to allow <em>every</em> origin.'),
     '#default_value' => variable_get('allowed_domains', ''),
+    '#resizable' => FALSE,
     '#attributes' => [
       'style' => 'max-width: 600px;',
     ],
@@ -106,6 +108,7 @@ function quicklink_config_form($form, &$form_state) {
     '#title' => t('Prefetch these paths only (overrides everything else)'),
     '#description' => t('If enabled, will override other settings. <strong>Only these paths will be prefetched.</strong> Include the forward slash at the beginning of the path.'),
     '#default_value' => variable_get('prefetch_only_paths', ''),
+    '#resizable' => FALSE,
     '#attributes' => [
       'style' => 'max-width: 600px;',
     ],
@@ -156,7 +159,7 @@ function quicklink_config_form($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Load <em>Intersection Observer</em> polyfill'),
     '#description' => t('This checkbox will enable loading of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" target="_blank">
-      Intersection Observer</a> polyfill from <a href="https://polyfill.io" target="_blank">polyfill.io</a>. This will enable usage of Quicklink in older browser versions.'),
+      Intersection Observer</a> polyfill from <a href="https://polyfill.io" target="_blank">polyfill.io</a>. This will enable usage of Quicklink in older browserSafari and Microsoft Edge browsers.'),
     '#default_value' => variable_get('load_polyfill', 1),
   ];
 
@@ -171,12 +174,16 @@ function quicklink_config_form($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Enable debug mode'),
     '#description' => t("Log Quicklink development information to the HTML and JavaScript console. You may need to clear Drupal's cache after changing this value."),
-    '#default_value' => variable_get('enable_debug_mode', 1),
+    '#default_value' => variable_get('enable_debug_mode', 0),
   ];
   $form['actions']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );
+
+  if (variable_get('enable_debug_mode', 0)) {
+    drupal_set_message('Quicklink debug mode enabled. Be sure to disable this on production.', 'warning');
+  }
 
   return $form;
 }
@@ -215,7 +222,7 @@ function quicklink_preprocess_html(&$variables) {
   $selector = variable_get('selector', '');
 
   // Get debug variable.
-  $debug = variable_get('enable_debug_mode', 1);
+  $debug = variable_get('enable_debug_mode', 0);
   $debug_log = [];
 
   // Load the library unless we disable later.
@@ -324,18 +331,13 @@ function quicklink_preprocess_html(&$variables) {
   }
 
   if ($load_library) {
-    if (variable_get('load_polyfill', '1') == 1) {
+    if (variable_get('load_polyfill', 1) == 1) {
       drupal_add_js('https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver', array(
         'type' => 'external',
         'weight' => -100,
       ));
       $debug_log[] = 'Intersection Observer polyfill library loaded';
     }
-
-    drupal_add_js(drupal_get_path('module', 'quicklink') . '/js/quicklink_init.js');
-
-    // Send settings to JavaScript.
-    drupal_add_js(array('quicklink' => $settings), array('type' => 'setting'));
 
     // Load Quicklink library.
     if (file_exists(DRUPAL_ROOT . '/sites/all/libraries/quicklink/quicklink.umd.js')) {
@@ -357,4 +359,6 @@ function quicklink_preprocess_html(&$variables) {
     $settings['debug_log'] = $debug_log;
   }
 
+  drupal_add_js(array('quicklink' => $settings), array('type' => 'setting'));
+  drupal_add_js(drupal_get_path('module', 'quicklink') . '/js/quicklink_init.js');
 }
